@@ -1,0 +1,9 @@
+"ivas.conversation.newConversationTitle" = "New Conversation";
+"ivas.conversationList.title" = "Conversations";
+"ivas.conversationList.userName" = "You";
+"ivas.navigationBar.closeButtonAria" = "Close Messenger";
+"ivas.inputBox.placeholder" = "Enter question here";
+"ivas.inputBox.sendButtonAria" = "Send input";
+"ivas.landingView.allConversationsButton" = "See all conversations";
+"ivas.landingView.recentConversationTitle" = "Recent conversation";
+"ivas.landingView.unauthorized" = "Something went wrong. Please go back and try again later.";

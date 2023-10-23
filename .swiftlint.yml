@@ -1,0 +1,20 @@
+disabled_rules:
+  - large_tuple
+  - opening_brace
+  - statement_position
+  - switch_case_alignment
+  - todo
+opt_in_rules:
+  - closure_end_indentation
+  - closure_spacing
+  - direct_return
+  - empty_collection_literal
+  - empty_string
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - multiline_arguments
+  - operator_usage_whitespace
+  - return_value_from_void_function
+  - sorted_imports
+  - superfluous_else
+  - unneeded_parentheses_in_closure_argument
