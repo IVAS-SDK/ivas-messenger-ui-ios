@@ -15,8 +15,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/iwill/generic-json-swift", exact: "2.0.2"),
-        .package(url: "https://github.com/socketio/socket.io-client-swift", exact: "16.0.1"),
-        .package(url: "https://github.com/dkk/WrappingHStack", exact: "2.2.10")
+        .package(url: "https://github.com/socketio/socket.io-client-swift", exact: "16.1.0"),
+        .package(url: "https://github.com/dkk/WrappingHStack", exact: "2.2.11")
     ],
     targets: [
         .target(
