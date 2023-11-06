@@ -55,6 +55,7 @@ extension CardView
                 directIntentHit: button.directIntentHit,
                 engagementId: engagementId,
                 input: button.input,
+                launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
                 metadataValue: config.metadata?.metadataValue,
                 pendingData: button.pendingData

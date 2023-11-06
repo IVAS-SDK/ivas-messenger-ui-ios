@@ -75,7 +75,12 @@ extension ConversationView
                 return true
             }
 
-            return config.launchAction?.preformedIntent != nil
+            if let intent = config.launchAction?.preformedIntent, intent != .Account && intent != .ContactUs
+            {
+                return true
+            }
+
+            return false
         }
 
         func performLaunchAction(config: Configuration)
@@ -103,6 +108,7 @@ extension ConversationView
                 directIntentHit: directIntent,
                 engagementId: engagementId,
                 input: input,
+                launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
                 metadataValue: config.metadata?.metadataValue
             )

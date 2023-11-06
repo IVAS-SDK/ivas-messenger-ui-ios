@@ -14,7 +14,10 @@ import XCTest
         manager = EngagementManagerMock()
         manager.settings = EngagementSettings()
         viewModel = InputBox.ViewModel(
-            config: Configuration(options: ConfigOptions(authToken: "")),
+            config: Configuration(
+                launchAction: LaunchAction(preformedIntent: .Account),
+                options: ConfigOptions(authToken: "")
+            ),
             manager: manager
         )
     }
@@ -53,6 +56,7 @@ import XCTest
         XCTAssertEqual(request.conversationId, expectedRequest.conversationId)
         XCTAssertEqual(request.engagementId, expectedRequest.engagementId)
         XCTAssertEqual(request.input, expectedRequest.input)
+        XCTAssertEqual(request.launchAction, viewModel.config.launchAction)
         XCTAssertEqual(request.metadataName, expectedRequest.metadataName)
         XCTAssertNotNil(request.metadataValue)
         XCTAssertEqual(viewModel.inputText, "")

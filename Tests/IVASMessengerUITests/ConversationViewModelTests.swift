@@ -350,6 +350,16 @@ import SwiftUI
                 haveLaunched: false,
                 launchAction: nil,
                 expected: false
+            ),
+            (
+                haveLaunched: false,
+                launchAction: LaunchAction(preformedIntent: .Account),
+                expected: false
+            ),
+            (
+                haveLaunched: false,
+                launchAction: LaunchAction(preformedIntent: .ContactUs),
+                expected: false
             )
         ]
 
@@ -428,6 +438,7 @@ import SwiftUI
             XCTAssertNil(request.directIntentHit)
             XCTAssertEqual(request.engagementId, "id")
             XCTAssertEqual(request.input, "hey")
+            XCTAssertEqual(request.launchAction, launchAction)
             XCTAssertNil(request.metadataName)
             XCTAssertNil(request.metadataValue)
             XCTAssertTrue(self.manager.isLaunchActionPerformed)
@@ -457,6 +468,7 @@ import SwiftUI
             XCTAssertEqual(request.directIntentHit, "MAPP: Custom Password Reset 1")
             XCTAssertEqual(request.engagementId, "id")
             XCTAssertEqual(request.input, "Password Help")
+            XCTAssertEqual(request.launchAction, launchAction)
             XCTAssertNil(request.metadataName)
             XCTAssertNil(request.metadataValue)
             XCTAssertTrue(self.manager.isLaunchActionPerformed)

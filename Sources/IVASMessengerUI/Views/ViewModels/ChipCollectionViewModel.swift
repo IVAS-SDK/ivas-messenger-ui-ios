@@ -31,6 +31,7 @@ extension ChipCollectionView
                 directIntentHit: option.directIntentHit,
                 engagementId: engagementId,
                 input: option.text,
+                launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
                 metadataValue: config.metadata?.metadataValue
             )

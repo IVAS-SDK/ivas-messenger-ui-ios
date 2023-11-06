@@ -68,7 +68,12 @@ extension LandingView
                 return true
             }
 
-            return config.launchAction?.preformedIntent != nil
+            if let intent = config.launchAction?.preformedIntent, intent != .Account && intent != .ContactUs
+            {
+                return true
+            }
+
+            return false
         }
     }
 }

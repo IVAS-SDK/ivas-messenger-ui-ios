@@ -8,6 +8,7 @@ struct AddConversationEventRequest: SocketData
     var directIntentHit: String?
     var engagementId: String
     var input: String
+    var launchAction: LaunchAction?
     var metadataName: String?
     var metadataValue: SocketData?
     var pendingData: SocketData?
@@ -18,6 +19,7 @@ struct AddConversationEventRequest: SocketData
         directIntentHit: String? = nil,
         engagementId: String,
         input: String,
+        launchAction: LaunchAction? = nil,
         metadataName: String? = nil,
         metadataValue: SocketData? = nil,
         pendingData: JSON? = nil,
@@ -28,6 +30,7 @@ struct AddConversationEventRequest: SocketData
         self.directIntentHit = directIntentHit
         self.engagementId = engagementId
         self.input = input
+        self.launchAction = launchAction
         self.metadataName = metadataName
         self.metadataValue = metadataValue
         self.pendingData = pendingData?.customSocketRepresentation()
@@ -41,6 +44,7 @@ struct AddConversationEventRequest: SocketData
             "directIntentHit": directIntentHit,
             "engagementId": engagementId,
             "input": input,
+            "launchAction": try launchAction?.socketRepresentation(),
             "pendingData": pendingData,
             "ping": ping
         ]

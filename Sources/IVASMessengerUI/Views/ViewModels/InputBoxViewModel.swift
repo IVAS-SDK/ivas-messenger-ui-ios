@@ -30,6 +30,7 @@ extension InputBox
                 conversationId: conversationId,
                 engagementId: engagementId,
                 input: inputText,
+                launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
                 metadataValue: config.metadata?.metadataValue
             )
