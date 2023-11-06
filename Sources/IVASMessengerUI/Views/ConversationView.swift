@@ -105,6 +105,7 @@ struct ConversationView: ViewControllable
         .onAppear() { viewModel.onAppear() }
         .onDisappear() { viewModel.onDisappear() }
         .onChange(of: viewsAppeared) { _ in viewModel.onViewsAppearedChange() }
+        .onChange(of: engagementManager.settings) { _ in viewModel.performLaunchAction(config: config) }
         .toolbar
         {
             ToolbarItem(placement: .principal)

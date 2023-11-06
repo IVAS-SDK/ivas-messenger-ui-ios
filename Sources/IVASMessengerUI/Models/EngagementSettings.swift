@@ -1,6 +1,6 @@
 import SwiftUI
 
-class EngagementSettings: Codable
+class EngagementSettings: Codable, Equatable
 {
     var actionColor: Color?
     var backgroundColorPrimary: Color?
@@ -21,4 +21,9 @@ class EngagementSettings: Codable
     var poweredBy: Bool?
     var soundNotifications: Bool?
     var tabNotifications: Bool?
+
+    static func == (lhs: EngagementSettings, rhs: EngagementSettings) -> Bool 
+    {
+        return lhs.engagementId == rhs.engagementId
+    }
 }
