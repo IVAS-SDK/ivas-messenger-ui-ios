@@ -32,6 +32,17 @@ struct ConversationEventView: View
                     .padding()
             }
 
+            if let formJson = event.metadata?["useForm"], isLast
+            {
+                FormView(
+                    config: config,
+                    engagementManager: engagementManager,
+                    form: formJson,
+                    conversationId: event.conversationId
+                )
+                .padding()
+            }
+
             if let options = event.options, isLast, !options.isEmpty
             {
                 ChipCollectionView(

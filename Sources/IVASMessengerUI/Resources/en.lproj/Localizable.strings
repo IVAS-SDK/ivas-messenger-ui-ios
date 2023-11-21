@@ -1,6 +1,7 @@
 "ivas.conversation.newConversationTitle" = "New Conversation";
 "ivas.conversationList.title" = "Conversations";
 "ivas.conversationList.userName" = "You";
+"ivas.form.submitTitle" = "Submit";
 "ivas.navigationBar.closeButtonAria" = "Close Messenger";
 "ivas.inputBox.placeholder" = "Enter question here";
 "ivas.inputBox.sendButtonAria" = "Send input";
