@@ -5,6 +5,7 @@ struct CardTemplate: Codable, Equatable
 {
     var banner: String?
     var buttons: [CardButton]?
+    var cards: [SimpleCard]?
     var image: String?
     var rows: [[CardRow]]?
     var title: String?
@@ -25,7 +26,15 @@ struct CardRow: Codable, Hashable
     var value: String
 }
 
+struct SimpleCard: Codable, Hashable
+{
+    var buttons: [CardButton]?
+    var rows: [[CardRow]]?
+    var title: String?
+}
+
 enum CardType: String, Codable
 {
     case card = "CARD"
+    case cardList = "CARD_LIST"
 }

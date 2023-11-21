@@ -98,6 +98,76 @@ struct CardView: View
             }
             .background(Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 8))
+
+            if let cards = template.cards, template.type == .cardList
+            {
+                ForEach(cards, id: \.self)
+                { card in 
+
+                    VStack(alignment: .leading, spacing: 0)
+                    {
+                        if let title = card.title
+                        {
+                            Text(title)
+                                .bold()
+                        }
+
+                        if let rows = card.rows
+                        {
+                            ForEach(rows, id: \.self)
+                            { row in
+
+                                VStack
+                                {
+                                    ForEach(0..<row.count, id: \.self)
+                                    { index in
+
+                                        HStack
+                                        {
+                                            Text(row[index].title)
+                                            Spacer()
+                                            Text(row[index].value)
+                                        }
+                                    }
+                                }
+                                .padding([.vertical])
+                            }
+                        }
+
+                        if let buttons = card.buttons
+                        {
+                            HStack
+                            {
+                                ForEach(0..<buttons.count, id: \.self)
+                                { index in
+
+                                    if index == 0
+                                    {
+                                        Spacer()
+                                    }
+
+                                    Button(buttons[index].title)
+                                    {
+                                        viewModel.sendInput(for: buttons[index])
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(engagementManager.settings?.actionColor)
+
+                                    if index == buttons.count - 1
+                                    {
+                                        Spacer()
+                                    }
+                                }
+                            }
+                            .padding([.horizontal])
+                        }
+                    }
+                    .padding()
+                    .background(Color.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .padding([.top])
+                }
+            }
         }
     }
 
