@@ -26,21 +26,20 @@ class ViewController: UIViewController
         if #available(iOS 15, *)
         {
             let configOptions = ConfigOptions(
-                authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50TnVtYmVyIjo1MDA5NjAyLCJhcGlOYW1lIjoibWVzc2VuZ2VyIiwicHJpdmF0ZSI6ZmFsc2UsImlhdCI6MTYxMDUwNzMxM30.USArf1gntyOIuCNRyo_XNJD5T5R5ngXbrwGk4moIWP0",
-                moduleLocalization: true
+                authToken: "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJ3b3Jrc3BhY2VJZCI6IjY1M2ZjMzQ5OGY0NWMzYWU2YTUzNDM0NCIsImlhdCI6MTY5ODY3NzU3N30.ylAGWScS3sehDgeFt4gbaIJGweV8O5wfYCizgZoIVsIU6LbEXAz_cDVSmWVmV1sJFwy6idYGkBUdpdFm8_9oFSvvZOl6xn9E2WtCyvN7Shk5pDRkJCJL2gdLTypCo5gP3Dk5LLK2JQ8tBRHuqUS85JZKslwSg7YVq73oA2eZVmOygeIyLFwZa2UnnQGUHPy85WhRRKVn9Rwm0z7PXG0akKVd1xmTHWhKwl9Il_NLmDjNF3BDWt5gzyQMvlv6nag232T6dNob_zBHYAQKkYYhrIh0Szf_765R05_fNRAsEginybgL_T02PUDDXj19YG2P8QDE45-fZd6zAonKY-9p-mqMzMo5bVrd5AOr0WCh8-zOTZ2uGiOzYKGguegnxW_91P-kn4n1NN0rJgc7jEpEgtA8dRDgNlSzBla6ChUlEqV9gs6MAUKVVbEL5XPlJbD_oD43BCbtX9VnNGWLm-_2JHfyPpjDDoIAj-xN3UAMFV-IOTKOBKscbUvBLfv5tIAB",
+                moduleLocalization: true,
+                prod: false,
+                routineHandler: GenesysLiveChat()
+                
             )
 
             let conversationMetadata = ConversationEventMetadata(
                 metadataName: "trackingJson",
                 metadataValue: [
-                    "sample": "data",
-                    "sample2": [1, 2, 3],
-                    "sample3": ["sample4": "sample5"],
-                    "prod": false,
-                    "isNative": true,
                     "hotelCode": "YUMAZ"
                 ]
             )
+            
 
             let config = Configuration(options: configOptions, metadata: conversationMetadata)
             { (event: AddConversationEventResponse) in
@@ -48,6 +47,7 @@ class ViewController: UIViewController
                 // Perform any analytics work here...
                 print(event)
             }
+            
 
             self.config = config
 

@@ -35,8 +35,9 @@ extension SocketIOClient
 
             guard let decoded = try? T(from: data[0]) else
             {
-                print("[SocketIO] \(event) data \(data) cannot be decoded to \(T.self)")
-
+                let message = "[SocketIO] \(event) data \(data) cannot be decoded to \(T.self)"
+                print(message)
+                
                 return
             }
 

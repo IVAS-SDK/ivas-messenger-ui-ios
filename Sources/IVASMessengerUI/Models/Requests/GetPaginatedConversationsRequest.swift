@@ -3,13 +3,13 @@ import SocketIO
 
 struct GetPaginatedConversationsRequest: SocketData
 {
-    var maxNumberResults: Int
+    var max: Int
     var page: Int
 
     func socketRepresentation() throws -> SocketData
     {
         return [
-            "maxNumberResults": maxNumberResults,
+            "max": max,
             "page": page
         ]
     }

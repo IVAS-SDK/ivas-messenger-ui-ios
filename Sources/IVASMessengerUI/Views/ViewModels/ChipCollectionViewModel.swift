@@ -20,23 +20,18 @@ extension ChipCollectionView
 
         func sendInput(option: ChipOption)
         {
-            guard let engagementId = engagementManager.settings?.engagementId
-            else
-            {
-                return
-            }
-
             let request = AddConversationEventRequest(
                 conversationId: conversationId,
+                userId: engagementManager.userId,
                 directIntentHit: option.directIntentHit,
-                engagementId: engagementId,
                 input: option.text,
                 launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
-                metadataValue: config.metadata?.metadataValue
+                metadataValue: config.metadata?.metadataValue,
+                prod: engagementManager.configOptions.prod
             )
 
-            engagementManager.emit(.addConversationEvent, request)
+            engagementManager.emit(.eventCreate, request)
         }
     }
 }

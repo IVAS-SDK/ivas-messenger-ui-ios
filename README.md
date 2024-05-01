@@ -52,7 +52,10 @@ class ViewController: UIViewController
             let configOptions = ConfigOptions(
 		        authToken: "MyAuthToken", // Same auth token used in web
 		        moduleLocalization: true, // Use localization bundled in this package (only en-US), or provide custom localizations at app level
-		        socketUrl: URL("MessengerSocketIOUrl") // Use to change environments if needed, defaults to "https://messenger.speakeasyai.com/socket.io"
+		        socketUrl: URL("MessengerSocketIOUrl") // Use to change environments if needed, defaults to "https://messenger.usw.ivastudio.ai"
+                namespace: "/v1" // environment specific namespace tied to url, defaults to "/v1"
+                prod: false, // flag to chage between prod and staging engagements
+                routineHandler: GenesysLiveChat()  //  optional routine handler, for example here the Genesys Live Chat module.  settings for this module are defined in the engagment on server
 		    )
 
             let conversationMetadata = ConversationEventMetadata(

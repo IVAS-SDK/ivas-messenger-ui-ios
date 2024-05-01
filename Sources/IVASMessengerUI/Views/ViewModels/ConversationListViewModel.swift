@@ -59,11 +59,11 @@ extension ConversationListView
             }
 
             let request = GetPaginatedConversationsRequest(
-                maxNumberResults: paginationData.maxPageSize,
+                max: paginationData.maxPageSize,
                 page: paginationData.currentPage + 1
             )
 
-            engagementManager.emit(.getPaginatedConversations, request)
+            engagementManager.emit(.conversationList, request)
         }
 
         // MARK: - Helper Methods
@@ -76,12 +76,17 @@ extension ConversationListView
                 return
             }
 
-            eventHandlers.append(engagementManager.registerHandler(.doneGettingPaginatedConversations)
-            { [weak self] (response: GetPaginatedConversationsResponse) in
+            eventHandlers.append(engagementManager.registerHandler(.conversationList)
+            { [weak self] (response: ConversationsResponse) in
 
                 self?.paginationData.currentPage = response.page
-                self?.paginationData.pagesRemaining = response.page != response.totalPages
-                self?.conversationList.append(contentsOf: response.rows)
+                
+                var totalPages = response.total / (self?.paginationData.maxPageSize ?? 10)
+                if(response.total % (self?.paginationData.maxPageSize ?? 10) > 0) {
+                    totalPages+=1 }
+                
+                self?.paginationData.pagesRemaining = response.page != totalPages
+                self?.conversationList.append(contentsOf: response.docs)
             })
         }
 

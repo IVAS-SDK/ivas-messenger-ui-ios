@@ -85,11 +85,8 @@ extension ConversationView
 
         func performLaunchAction(config: Configuration)
         {
-            guard let engagementId = engagementManager.settings?.engagementId, shouldPerformLaunchAction(config: config)
-            else
-            {
-                return
-            }
+            //guard let engagementId = engagementManager.settings?.engagementId,
+            if(!shouldPerformLaunchAction(config: config)) {return }
 
             var input = ""
             var directIntent: String? = nil
@@ -105,19 +102,20 @@ extension ConversationView
             }
 
             let request = AddConversationEventRequest(
+                userId:engagementManager.userId,
                 directIntentHit: directIntent,
-                engagementId: engagementId,
                 input: input,
                 launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
-                metadataValue: config.metadata?.metadataValue
+                metadataValue: config.metadata?.metadataValue,
+                prod: engagementManager.configOptions.prod
             )
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0)
             { [weak self] in
 
                 self?.engagementManager.isLaunchActionPerformed = true
-                self?.engagementManager.emit(.addConversationEvent, request)
+                self?.engagementManager.emit(.eventCreate, request)
             }
         }
 
@@ -153,7 +151,7 @@ extension ConversationView
                 return
             }
             
-            eventHandlers.append(engagementManager.registerHandler(.doneAddingConversationEvent)
+            eventHandlers.append(engagementManager.registerHandler(.eventCreate)
             { [weak self] (response: AddConversationEventResponse) in
 
                 guard let self = self
@@ -168,24 +166,28 @@ extension ConversationView
                 self.conversationHistory.append(self.buildConversationEvent(from: response))
             })
 
-            eventHandlers.append(engagementManager.registerHandler(.doneGettingPaginatedConversationEvents)
-            { [weak self] (response: GetPaginatedConversationEventsResponse) in
+            eventHandlers.append(engagementManager.registerHandler(.eventList)
+            { [weak self] (response: ConversationEventsResponse) in
 
                 guard let self = self
                 else
                 {
                     return
                 }
+                
+                var totalPages = response.total / paginationData.maxPageSize
+                if(response.total % paginationData.maxPageSize > 0) {
+                    totalPages+=1 }
 
                 self.paginationData.currentPage = response.page
-                self.paginationData.pagesRemaining = response.page != response.totalPages
+                self.paginationData.pagesRemaining = response.page != totalPages
                 self.conversationHistory.insert(
-                    contentsOf: response.rows.reversed().map({ self.buildConversationEvent(from: $0) }),
+                    contentsOf: response.docs.reversed().map({ self.buildConversationEvent(from: $0) }),
                     at: 0
                 )
             })
 
-            eventHandlers.append(engagementManager.registerHandler(.isTyping)
+            /*eventHandlers.append(engagementManager.registerHandler(.isTyping)
             { [weak self] (response: TypingResponse) in
 
                 if response.typing
@@ -212,7 +214,7 @@ extension ConversationView
                         return $0.typing == true && $0.userId == response.userId
                     })
                 }
-            })
+            })*/
         }
 
         private func unregisterEventHandlers()
@@ -231,14 +233,13 @@ extension ConversationView
 
             let joinRequest = JoinConversationRequest(conversationId: id)
             let eventsRequest = GetPaginatedConversationEvents(
-                _id: id,
-                maxNumberResults: paginationData.maxPageSize,
+                conversationId: id,
                 page: 1,
-                skipCounter: paginationData.skipCounter
+                max: paginationData.maxPageSize
             )
 
-            engagementManager.emit(.joinConversation, joinRequest)
-            engagementManager.emit(.getPaginatedConversationEvents, eventsRequest)
+            engagementManager.emit(.conversationJoin, joinRequest)
+            engagementManager.emit(.eventList, eventsRequest)
         }
 
         private func checkIfShouldLoadPage()
@@ -279,24 +280,24 @@ extension ConversationView
             lastTopId = topId
 
             let request = GetPaginatedConversationEvents(
-                _id: conversationId,
-                maxNumberResults: paginationData.maxPageSize,
+                conversationId:conversationId,
+                
                 page: paginationData.currentPage + 1,
-                skipCounter: paginationData.skipCounter
+                max: paginationData.maxPageSize
             )
 
-            engagementManager.emit(.getPaginatedConversationEvents, request)
+            engagementManager.emit(.eventList, request)
         }
 
         private func buildConversationEvent(from response: AddConversationEventResponse) -> ConversationEvent
         {
             return ConversationEvent(
                 conversationId: response.conversationId,
-                id: response._id,
+                id: response._id ?? "",
                 input: response.input,
                 metadata: response.metadata,
                 options: response.options?.map({
-                    ChipOption(displayText: $0.displayText, directIntentHit: $0.directIntentHit, text: $0.text)
+                    ChipOption(displayText: $0.displayText, directIntentHit: $0.directIntentHit, text: $0.input)
                 }),
                 sentAt: response.sentAt,
                 sentBy: response.sentBy

@@ -13,7 +13,7 @@ import SwiftUI
         super.setUp()
 
         manager = EngagementManagerMock()
-        manager.settings = EngagementSettings()
+        manager.settings = MessengerEngagementSettings()
         viewModel = CardView.ViewModel(
             config: Configuration(options: ConfigOptions(authToken: "")),
             manager: manager,
@@ -116,7 +116,6 @@ import SwiftUI
             pendingData: ["temp": "t"],
             title: "title"
         )
-        manager.settings?.engagementId = nil
 
         viewModel.sendInput(for: button)
 
@@ -128,7 +127,6 @@ import SwiftUI
         let expectedRequest = AddConversationEventRequest(
             conversationId: "convoId",
             directIntentHit: "intent",
-            engagementId: "id",
             input: "input",
             metadataName: "n",
             metadataValue: ["t": "v"],
@@ -140,7 +138,6 @@ import SwiftUI
             pendingData: ["temp": "t"], 
             title: "title"
         )
-        manager.settings?.engagementId = "id"
         viewModel.config.metadata = ConversationEventMetadata(
             metadataName: "n",
             metadataValue: ["t": "v"]
@@ -151,10 +148,9 @@ import SwiftUI
         let event = manager.emittedEvents.first?.0
         let request = manager.emittedEvents.first?.1.first as! AddConversationEventRequest
 
-        XCTAssertEqual(event, .addConversationEvent)
+        XCTAssertEqual(event, .eventCreate)
         XCTAssertEqual(request.conversationId, expectedRequest.conversationId)
         XCTAssertEqual(request.directIntentHit, expectedRequest.directIntentHit)
-        XCTAssertEqual(request.engagementId, expectedRequest.engagementId)
         XCTAssertEqual(request.input, expectedRequest.input)
         XCTAssertEqual(request.metadataName, expectedRequest.metadataName)
         XCTAssertNotNil(request.metadataValue)

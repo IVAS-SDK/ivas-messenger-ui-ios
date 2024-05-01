@@ -114,7 +114,7 @@ extension FormView
 
         private func sendInput()
         {
-            guard let engagementId = engagementManager.settings?.engagementId, let intent = template?.destination?.directIntentHit
+            guard let intent = template?.destination?.directIntentHit
             else
             {
                 return
@@ -122,19 +122,20 @@ extension FormView
 
             let request = AddConversationEventRequest(
                 conversationId: conversationId,
+                userId: engagementManager.userId,
                 directIntentHit: intent,
-                engagementId: engagementId,
                 input: "Form Submitted",
                 launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
                 metadataValue: config.metadata?.metadataValue,
-                pendingData: buildPendingData()
+                postBack: buildPostBack(),
+                prod: engagementManager.configOptions.prod
             )
 
-            engagementManager.emit(.addConversationEvent, request)
+            engagementManager.emit(.eventCreate, request)
         }
 
-        private func buildPendingData() -> JSON?
+        private func buildPostBack() -> JSON?
         {
             var data: [String: String] = [:]
 

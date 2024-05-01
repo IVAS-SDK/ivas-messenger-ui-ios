@@ -22,7 +22,7 @@ extension CardView
 
         func getCardTemplate() -> CardTemplate?
         {
-            guard let json = event.metadata?["templateData"]
+            guard let json = event.metadata?["outputs"]?["templateData"]
             else
             {
                 return nil
@@ -44,24 +44,19 @@ extension CardView
 
         func sendInput(for button: CardButton)
         {
-            guard let engagementId = engagementManager.settings?.engagementId
-            else
-            {
-                return
-            }
-
             let request = AddConversationEventRequest(
                 conversationId: event.conversationId,
+                userId: engagementManager.userId,
                 directIntentHit: button.directIntentHit,
-                engagementId: engagementId,
                 input: button.input,
                 launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
                 metadataValue: config.metadata?.metadataValue,
-                pendingData: button.pendingData
+                postBack: button.pendingData,
+                prod: engagementManager.configOptions.prod
             )
 
-            engagementManager.emit(.addConversationEvent, request)
+            engagementManager.emit(.eventCreate, request)
         }
     }
 }

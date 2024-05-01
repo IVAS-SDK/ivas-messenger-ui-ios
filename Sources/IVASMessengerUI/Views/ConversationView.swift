@@ -43,7 +43,7 @@ struct ConversationView: ViewControllable
                                         config: config,
                                         engagementManager: engagementManager,
                                         options: options.map({
-                                            ChipOption(displayText: $0.displayText, directIntentHit: $0.directIntentHit, text: $0.text)
+                                            ChipOption(displayText: $0.displayText, directIntentHit: $0.directIntentHit, text: $0.input)
                                         }),
                                         conversationId: nil
                                     )
@@ -98,6 +98,15 @@ struct ConversationView: ViewControllable
                 }
                 Divider()
                     .overlay(.gray)
+                if(engagementManager.showAction) {
+                    Button(action:{engagementManager.configOptions.routineHandler?.onAction()}, label: {Text("End Live Chat")
+                            .frame(maxWidth: .infinity)
+                            .padding()})
+                        
+                        .background(engagementManager.settings?.actionColor)
+                        .buttonStyle(.borderless)
+                        .buttonStyle(.borderedProminent)
+                }
                 InputBox(config: config, engagementManager: engagementManager, conversationId: viewModel.conversationId)
             }
         }

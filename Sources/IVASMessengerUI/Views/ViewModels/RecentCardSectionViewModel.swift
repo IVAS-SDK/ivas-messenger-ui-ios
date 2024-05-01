@@ -87,10 +87,10 @@ extension RecentCardSection
                 return
             }
 
-            eventHandlers.append(engagementManager.registerHandler(.doneGettingPaginatedConversations)
-            { [weak self] (response: GetPaginatedConversationsResponse) in
+            eventHandlers.append(engagementManager.registerHandler(.conversationList)
+            { [weak self] (response: ConversationsResponse) in
 
-                guard let convo = response.rows.first
+                guard let convo = response.docs.first
                 else
                 {
                     return
@@ -121,9 +121,9 @@ extension RecentCardSection
                 return
             }
 
-            let request = GetPaginatedConversationsRequest(maxNumberResults: 1, page: 1)
+            let request = GetPaginatedConversationsRequest(max: 1, page: 1)
 
-            engagementManager.emit(.getPaginatedConversations, request)
+            engagementManager.emit(.conversationList, request)
         }
     }
 }

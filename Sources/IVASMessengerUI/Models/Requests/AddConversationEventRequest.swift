@@ -2,60 +2,95 @@ import Foundation
 import GenericJSON
 import SocketIO
 
-struct AddConversationEventRequest: SocketData
+public struct AddConversationEventRequest: SocketData
 {
+    let CHANNEL = "MobileSDK"
+    
     var conversationId: String?
+    var userId: String?
     var directIntentHit: String?
-    var engagementId: String
     var input: String
     var launchAction: LaunchAction?
     var metadataName: String?
     var metadataValue: SocketData?
-    var pendingData: SocketData?
+    var liveChatState: String?
+    var postBack: SocketData?
     var ping = UUID().uuidString
+    var ncPing = UUID().uuidString
+    var prod: Bool
 
     init(
         conversationId: String? = nil,
+        userId: String?,
         directIntentHit: String? = nil,
-        engagementId: String,
         input: String,
         launchAction: LaunchAction? = nil,
         metadataName: String? = nil,
         metadataValue: SocketData? = nil,
-        pendingData: JSON? = nil,
-        ping: String = UUID().uuidString
+        postBack: JSON? = nil,
+        ping: String = UUID().uuidString,
+        prod: Bool = true
     )
     {
         self.conversationId = conversationId
+        self.userId = userId
         self.directIntentHit = directIntentHit
-        self.engagementId = engagementId
         self.input = input
         self.launchAction = launchAction
         self.metadataName = metadataName
         self.metadataValue = metadataValue
-        self.pendingData = pendingData?.customSocketRepresentation()
+        self.postBack = postBack?.customSocketRepresentation()
         self.ping = ping
+        self.prod = prod
     }
-
-    func socketRepresentation() throws -> SocketData
+    
+    
+    public func socketRepresentation() throws -> SocketData
     {
+
         var data: [String: SocketData?] = [
-            "conversationId": conversationId,
-            "directIntentHit": directIntentHit,
-            "engagementId": engagementId,
             "input": input,
-            "launchAction": try launchAction?.socketRepresentation(),
-            "pendingData": pendingData,
             "ping": ping
         ]
-
-        guard let name = metadataName, let value = metadataValue
-        else
-        {
-            return data
+        if(directIntentHit != nil) {
+            data["configuration"] = ["directIntentHit":directIntentHit]
         }
-
-        data[name] = value
+        
+        if(launchAction != nil) {
+            data["launchAction"] = launchAction
+        }
+        
+        if(postBack != nil) {
+            data["postBack"] = postBack
+        }
+        
+            if(conversationId != nil) {
+                data["conversationId"] = conversationId
+            } else {
+                data["ncPing"] = UUID().uuidString
+            }
+        
+            
+        if(userId != nil) {
+            data["sentBy"] = ["userId":userId]
+        }
+        
+        var metadata: [String: SocketData?] = [:]
+        
+        // add any metadata from user
+        if let name = metadataName, let value = metadataValue {
+            metadata[name] = value
+        }
+        
+        metadata["channel"] = CHANNEL
+        
+        if(liveChatState != nil) {
+            metadata["livechatState"] = liveChatState
+        }
+        
+        data["metadata"] = metadata
+        
+        data["params"] = ["prod":prod]
 
         return data
     }

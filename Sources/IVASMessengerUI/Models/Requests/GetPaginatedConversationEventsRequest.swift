@@ -3,18 +3,15 @@ import SocketIO
 
 struct GetPaginatedConversationEvents: SocketData
 {
-    var _id: String
-    var maxNumberResults: Int
+    var conversationId: String
     var page: Int
-    var skipCounter: Int
-
+    var max: Int
     func socketRepresentation() throws -> SocketData
     {
         return [
-            "_id": _id,
-            "maxNumberResults": maxNumberResults,
+            "conversationId": conversationId,
+            "max": max,
             "page": page,
-            "skipCounter": skipCounter
         ] as [String: any Hashable]
     }
 }

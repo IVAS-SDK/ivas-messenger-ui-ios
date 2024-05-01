@@ -20,24 +20,26 @@ extension InputBox
 
         func sendInput(conversationId: String?)
         {
-            guard let engagementId = engagementManager.settings?.engagementId
-            else
-            {
+            if(inputText == "") {
                 return
             }
-
-            let request = AddConversationEventRequest(
+            
+            var request = AddConversationEventRequest(
                 conversationId: conversationId,
-                engagementId: engagementId,
+                userId: engagementManager.userId,
                 input: inputText,
                 launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
-                metadataValue: config.metadata?.metadataValue
+                metadataValue: config.metadata?.metadataValue,
+                prod: engagementManager.configOptions.prod
             )
 
             inputText = ""
+            
+            // TODO: handle input from all sources
+            engagementManager.configOptions.routineHandler?.beforeAddConversationEvent(payload: &request)
 
-            engagementManager.emit(.addConversationEvent, request)
+            engagementManager.emit(.eventCreate, request)
         }
 
         func getInputPlaceholder() -> String

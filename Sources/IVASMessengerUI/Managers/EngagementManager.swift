@@ -7,16 +7,19 @@ class EngagementManager: ObservableObject
     @Published var isAuthenticated: Bool?
     @Published var isLaunchActionPerformed = false
     @Published var isSocketConnected = false
-    @Published var settings: EngagementSettings?
+    @Published var settings: MessengerEngagementSettings?
+    @Published var showAction: Bool = false
 
     var configOptions: ConfigOptions
     var conversationEventHandler: ((AddConversationEventResponse) -> ())?
     var localizationBundle: Bundle
     var userId = UUID().uuidString
+    var userToken = ""
 
     private var socketManager: SocketManager
     private var socket: SocketIOClient
     private let userIdKey = "ivas.userId"
+    private let userTokenKey = "ivas.userToken"
 
     // MARK: - Public Methods
 
@@ -28,16 +31,22 @@ class EngagementManager: ObservableObject
         }
         else
         {
-            UserDefaults.standard.set(self.userId, forKey: userIdKey)
+            self.userId = UUID().uuidString
         }
-
-        var newConfig = configOptions.socketConfig
-        newConfig.insert(SocketIOClientOption.connectParams(["userId": self.userId]))
+        
+        if let storedUserToken = UserDefaults.standard.string(forKey: userTokenKey)
+        {
+            self.userToken = storedUserToken
+        }
+        else
+        {
+            self.userToken = ""
+        }
 
         self.configOptions = configOptions
         self.conversationEventHandler = eventHandler
-        self.socketManager = SocketManager(socketURL: configOptions.socketUrl, config: newConfig)
-        self.socket = socketManager.defaultSocket
+        self.socketManager = SocketManager(socketURL: configOptions.socketUrl, config: configOptions.socketConfig)
+        self.socket = socketManager.socket(forNamespace: configOptions.namespace)
         self.localizationBundle = configOptions.moduleLocalization ? .module : .main
 
         registerDefaultEventHandlers()
@@ -49,10 +58,24 @@ class EngagementManager: ObservableObject
     {
         disconnect()
     }
+    
+    func updateUserToken(token: UserTokenResponse)
+    {
+        self.userToken = token.userToken
+            UserDefaults.standard.set(self.userToken, forKey: userTokenKey)
+    
+        self.userId  = token.userId
+        UserDefaults.standard.set(self.userId, forKey: userIdKey)
+    }
 
     func connect()
     {
-        socket.connect()
+        let auth = ["token" :  self.configOptions.authToken,
+                    "userId" :  self.userId,
+                    "referer" :  (self.configOptions.prod) ? "mobile-prod" : "mobile-stage",
+                    "userToken" : self.userToken]
+        
+        socket.connect(withPayload: auth)
     }
 
     func disconnect()
@@ -81,16 +104,27 @@ class EngagementManager: ObservableObject
     {
         socket.on(clientEvent: .connect)
         { [weak self] _, _ in
-
+            
             self?.isSocketConnected = true
-
+            
             guard self?.isAuthenticated == nil
             else
             {
                 return
             }
-
-            self?.socket.emit(.authenticate, AuthenticateRequest(token: self?.configOptions.authToken ?? ""))
+            
+            self?.socket.emitWithAck("Engagement:get").timingOut(after: 10000)
+            { args in
+                guard let dict = args.first as? [String: Any] else { return }
+                
+                let response = try? GetEngagementResponse(from: dict)
+                
+                self?.isAuthenticated = true
+                self?.settings = response?.settings
+                
+                self?.configOptions.routineHandler?.onEngagementLoad(settings: response?.routines.onEngagementLoad ?? "")
+            }
+            
         }
 
         socket.on(clientEvent: .disconnect)
@@ -99,30 +133,20 @@ class EngagementManager: ObservableObject
             self?.isSocketConnected = false
         }
 
-        _ = socket.on(.authenticated)
-        { [weak self] _, _ in
-
-            self?.isAuthenticated = true
-
-            self?.socket.emit(.getEngagementBasedOnRules, [String: Any]())
-        }
-
-        _ = socket.on(.unauthorized)
-        { [weak self] _, _ in
-
-            self?.isAuthenticated = false
-        }
-
-        _ = socket.on(.doneGettingEngagementBasedOnRules)
-        { [weak self] (response: GetEngagementResponse) in
-
-            self?.settings = response.settings
-        }
-
-        _ = socket.on(.doneAddingConversationEvent)
+        _ = socket.on(.eventCreate)
         { [weak self] (response: AddConversationEventResponse) in
-
             self?.conversationEventHandler?(response)
+            
+            let connected = self?.configOptions.routineHandler?.afterAddConversationEvent(payload: response)
+            if(self?.showAction != connected) {
+                self?.showAction = connected ?? false
+            }
         }
+        
+        _ = socket.on(.userToken)
+        { [weak self] (response: UserTokenResponse) in
+            self?.updateUserToken(token:response)
+        }
+        
     }
 }

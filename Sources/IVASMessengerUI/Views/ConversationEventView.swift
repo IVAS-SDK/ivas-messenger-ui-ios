@@ -5,7 +5,7 @@ struct ConversationEventView: View
 {
     @ObservedObject var config: Configuration
     @ObservedObject var engagementManager: EngagementManager
-
+    
     let event: ConversationEvent
     let showLoadingIndicator: Bool
     let isLast: Bool
@@ -18,7 +18,7 @@ struct ConversationEventView: View
             {
                 LoadingView()
             }
-
+            
             if engagementManager.userId == event.sentBy?.userId
             {
                 UserEventView(engagementManager: engagementManager, event: event)
@@ -32,7 +32,7 @@ struct ConversationEventView: View
                     .padding()
             }
 
-            if let formJson = event.metadata?["useForm"], isLast
+            if let formJson = event.metadata?["outputs"]?["useForm"], isLast
             {
                 FormView(
                     config: config,

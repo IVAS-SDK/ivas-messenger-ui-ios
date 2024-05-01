@@ -54,14 +54,14 @@ extension ParticipantsView
                 return
             }
             
-            eventHandlers.append(engagementManager.registerHandler(.doneUpdatingParticipants)
+            eventHandlers.append(engagementManager.registerHandler(.conversationUpdateParticipants)
             { [weak self] (response: UpdateParticipantsResponse) in
 
                 self?.participantsData = self?.filterCurrentUser(data: response.participantsData) ?? []
             })
 
-            eventHandlers.append(engagementManager.registerHandler(.doneGettingPaginatedConversationEvents)
-            { [weak self] (response: GetPaginatedConversationEventsResponse) in
+            eventHandlers.append(engagementManager.registerHandler(.eventList)
+            { [weak self] (response: ConversationEventsResponse) in
 
                 self?.participantsData = self?.filterCurrentUser(data: response.conversation.participantsData) ?? []
             })

@@ -1,14 +1,13 @@
 import Foundation
 import SocketIO
 
-public let defaultUrl = URL("https://messenger.speakeasyai.com/socket.io")
+public let defaultUrl = URL("https://messenger.usw.ivastudio.ai")
+public let defaultNamespace = "/v1"
+
 public let defaultConfig: SocketIOClientConfiguration = [
-    .extraHeaders(["origin": "https://mobile-sdk.speakeasyai.com"]),
     .forceWebsockets(true),
-    .forceNew(true),
     .log(true),
-    .reconnectAttempts(3),
-    .version(.two)
+    .version(.three),
 ]
 
 public struct ConfigOptions
@@ -17,16 +16,26 @@ public struct ConfigOptions
     public var moduleLocalization: Bool
     public var socketConfig: SocketIOClientConfiguration
     public var socketUrl: URL
+    public var namespace: String
+    public var prod: Bool
+    public var routineHandler: IEngagementRoutine?
 
     public init(
         authToken: String,
         moduleLocalization: Bool = false,
         socketConfig: SocketIOClientConfiguration = defaultConfig,
-        socketUrl: URL = defaultUrl
+        socketUrl: URL = defaultUrl,
+        namespace: String = defaultNamespace,
+        prod: Bool = true,
+        routineHandler: IEngagementRoutine? = nil
     ) {
         self.authToken = authToken
         self.moduleLocalization = moduleLocalization
         self.socketConfig = socketConfig
         self.socketUrl = socketUrl
+        self.namespace = namespace
+        self.prod = prod
+        self.routineHandler = routineHandler
     }
 }
+
