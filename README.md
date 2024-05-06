@@ -9,7 +9,7 @@ You can add IVAS MessengerUI iOS to an Xcode project by adding it as a package d
 Add the following to `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/IVAS-Service/ivas-messenger-ui-ios", exact: "x.x.x")
+.package(url: "https://github.com/IVAS-SDK/ivas-messenger-ui-ios", exact: "x.x.x")
 ```
 
 Or [add the package in Xcode](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app).

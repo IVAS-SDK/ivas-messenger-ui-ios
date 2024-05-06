@@ -100,8 +100,8 @@ extension RecentCardSection
                     id: convo.id,
                     input: convo.lastMessage.input,
                     sentAt: convo.lastMessage.sentAt,
-                    sentByAvatar: convo.lastMessage.sentBy.avatar,
-                    sentByName: convo.lastMessage.sentBy.name,
+                    sentByAvatar: convo.participantsData[convo.lastMessage.sentBy.userId!]?.avatar,
+                    sentByName: convo.participantsData[convo.lastMessage.sentBy.userId!]?.name,
                     sentByUserId: convo.lastMessage.sentBy.userId
                 )
             })

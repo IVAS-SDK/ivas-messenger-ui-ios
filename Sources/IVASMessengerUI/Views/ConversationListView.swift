@@ -41,8 +41,8 @@ struct ConversationListView: ViewControllable
                                             id: conversation.id,
                                             input: conversation.lastMessage.input,
                                             sentAt: conversation.lastMessage.sentAt,
-                                            sentByAvatar: conversation.lastMessage.sentBy.avatar,
-                                            sentByName: conversation.lastMessage.sentBy.name,
+                                            sentByAvatar: conversation.participantsData[conversation.lastMessage.sentBy.userId!]?.avatar,
+                                            sentByName: conversation.participantsData[conversation.lastMessage.sentBy.userId!]?.name,
                                             sentByUserId: conversation.lastMessage.sentBy.userId
                                         ),
                                         holder: holder

@@ -13,7 +13,8 @@ struct NonUserEventView: View
     {
         HStack(alignment: .bottom)
         {
-            if let avatar = event.sentBy?.avatar
+            
+            if let avatar = event.sentBy?.avatar //conversation.participants[event.sentBy?.userId].av event.sentBy?.avatar TODO:
             {
                 AsyncImage(url: URL(string: avatar))
                 { image in

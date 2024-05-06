@@ -148,5 +148,9 @@ class EngagementManager: ObservableObject
             self?.updateUserToken(token:response)
         }
         
+        //TODO:  _ = socket.on(.conversationUpdateParticipants)
+        // { [weak self] (response: UpdateParticipantsResponse) in
+        // }
+        
     }
 }

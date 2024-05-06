@@ -7,9 +7,14 @@ extension CardView
 {
     @MainActor class ViewModel: ObservableObject
     {
+        @Published var showMessage: Bool = false
+        var message: String = ""
+        
         var config: Configuration
         var engagementManager: EngagementManager
         var event: ConversationEvent
+        
+        //var showingAlert: Bool = false
 
         // MARK: - Public Methods
 
@@ -31,32 +36,49 @@ extension CardView
             do
             {
                 let data = try JSONEncoder().encode(json)
-
+                
+                //let str = String(data: data, encoding: .utf8)
+                
                 return try JSONDecoder().decode(CardTemplate.self, from: data)
             }
             catch
             {
-                print("Unable to read card template: \(error)")
-
+                let msg = "Unable to read card template: \(error)"
+                print(msg)
+                
                 return nil
             }
         }
 
         func sendInput(for button: CardButton)
         {
-            let request = AddConversationEventRequest(
-                conversationId: event.conversationId,
-                userId: engagementManager.userId,
-                directIntentHit: button.directIntentHit,
-                input: button.input,
-                launchAction: config.launchAction,
-                metadataName: config.metadata?.metadataName,
-                metadataValue: config.metadata?.metadataValue,
-                postBack: button.pendingData,
-                prod: engagementManager.configOptions.prod
-            )
-
-            engagementManager.emit(.eventCreate, request)
+            
+            if ((button.type == "ToggleVisibility") && (button.targetElements != nil)) {
+                //for (cardId in button.targetElements!!) {
+                //    this.cardListView?.toggleCardVisibility(cardId)
+                //}
+            } else if ((button.type == "DisplayText") && button.text != nil) {
+                
+                message = button.text ?? ""
+                showMessage = true
+                print(button.text!)
+                
+            } else if ((button.directIntentHit != nil) && (button.pendingData != nil)) {
+                let request = AddConversationEventRequest(
+                    conversationId: event.conversationId,
+                    userId: engagementManager.userId,
+                    directIntentHit: button.directIntentHit,
+                    input: button.input ?? "Form submitted",
+                    launchAction: config.launchAction,
+                    metadataName: config.metadata?.metadataName,
+                    metadataValue: config.metadata?.metadataValue,
+                    postBack: button.pendingData,
+                    prod: engagementManager.configOptions.prod
+                )
+                
+                engagementManager.emit(.eventCreate, request)
+                
+            }
         }
     }
 }

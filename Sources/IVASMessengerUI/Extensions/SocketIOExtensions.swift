@@ -16,23 +16,23 @@ extension SocketIOClient
     {
         return self.on(event.rawValue)
         { data, ack in
-
+            
             callback(data, ack)
         }
     }
-
+    
     func on<T: Decodable>(_ event: CustomSocketEvents, callback: @escaping (T) -> Void) -> UUID
     {
         return self.on(event.rawValue)
         { data, _ in
-
+            
             guard !data.isEmpty else
             {
                 print("[SocketIO] \(event) data empty")
-
+                
                 return
             }
-
+            
             guard let decoded = try? T(from: data[0]) else
             {
                 let message = "[SocketIO] \(event) data \(data) cannot be decoded to \(T.self)"
@@ -40,11 +40,11 @@ extension SocketIOClient
                 
                 return
             }
-
+            
             callback(decoded)
         }
     }
-
+    
     func emit(_ event: CustomSocketEvents, _ items: SocketData..., completion: (() -> Void)? = nil)
     {
         emit(event.rawValue, with: items, completion: completion)

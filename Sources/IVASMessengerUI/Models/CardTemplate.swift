@@ -3,20 +3,33 @@ import GenericJSON
 
 struct CardTemplate: Codable, Equatable
 {
-    var banner: String?
-    var buttons: [CardButton]?
-    var cards: [SimpleCard]?
     var image: String?
-    var rows: [[CardRow]]?
     var title: String?
+    var banner: String?
+    var rows: [CardRow]?
+    var buttons: [CardButton]?
+    
+    
     var type: CardType
+    var cards: [SimpleCard]?
 }
 
 struct CardButton: Codable, Hashable
 {
     var directIntentHit: String?
-    var input: String
+    var input: String?
     var pendingData: JSON?
+
+    // valid for type ToggleVisibility
+    var targetElements: [String]?
+    var isVisible: Bool?
+
+    // valid for type DisplayText
+    var text: String?
+
+    // valid for all
+    var type: String?
+
     var title: String
 }
 
@@ -28,9 +41,12 @@ struct CardRow: Codable, Hashable
 
 struct SimpleCard: Codable, Hashable
 {
-    var buttons: [CardButton]?
-    var rows: [[CardRow]]?
+    var id: String?
     var title: String?
+    var image: String?
+    var buttons: [CardButton]?
+    var rows: [CardRow]?
+    var isVisible: Bool?
 }
 
 enum CardType: String, Codable
