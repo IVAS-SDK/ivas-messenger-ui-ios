@@ -1,19 +1,19 @@
 import Foundation
 import GenericJSON
 
-struct ConversationEvent: Identifiable, Equatable
+public struct ConversationEvent: Identifiable, Equatable
 {
-    var conversationId: String?
-    var id: String
-    var input: String?
-    var metadata: [String: JSON]?
-    var options: [ChipOption]?
-    var sentAt: TimeInterval?
-    var sentBy: Participant?
-    var typing: Bool?
-    var userId: String?
+    public var conversationId: String?
+    public var id: String
+    public var input: String?
+    public var metadata: [String: JSON]?
+    public var options: [ChipOption]?
+    public var sentAt: TimeInterval?
+    public var sentBy: Participant?
+    public var typing: Bool?
+    public var userId: String?
 
-    static func == (lhs: ConversationEvent, rhs: ConversationEvent) -> Bool
+    public static func == (lhs: ConversationEvent, rhs: ConversationEvent) -> Bool
     {
         return lhs.id == rhs.id
     }

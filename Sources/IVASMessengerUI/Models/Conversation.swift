@@ -1,17 +1,17 @@
 import Foundation
 
-struct Conversation: Codable, Identifiable, Equatable
+public struct Conversation: Codable, Identifiable, Equatable
 {
-    var id: String { _id }
+    public var id: String { _id }
 
-    var _id: String
-    var workspaceId: String
-    var lastMessage: AddConversationEventResponse
+    public var _id: String
+    public var workspaceId: String
+    public var lastMessage: AddConversationEventResponse
     var participants: [String]
     var participantsData: [String: Participant]
 
     
-    static func == (lhs: Conversation, rhs: Conversation) -> Bool
+    public static func == (lhs: Conversation, rhs: Conversation) -> Bool
     {
         return lhs._id == rhs._id
     }

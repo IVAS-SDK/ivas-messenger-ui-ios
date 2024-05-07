@@ -20,7 +20,7 @@ extension ChipCollectionView
 
         func sendInput(option: ChipOption)
         {
-            let request = AddConversationEventRequest(
+            var request = AddConversationEventRequest(
                 conversationId: conversationId,
                 userId: engagementManager.userId,
                 directIntentHit: option.directIntentHit,
@@ -31,6 +31,7 @@ extension ChipCollectionView
                 prod: engagementManager.configOptions.prod
             )
 
+            engagementManager.configOptions.routineHandler?.beforeAddConversationEvent(payload: &request)
             engagementManager.emit(.eventCreate, request)
         }
     }

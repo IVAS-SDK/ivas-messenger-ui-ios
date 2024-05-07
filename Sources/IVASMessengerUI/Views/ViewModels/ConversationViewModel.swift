@@ -101,7 +101,7 @@ extension ConversationView
                 directIntent = data.directIntentHit
             }
 
-            let request = AddConversationEventRequest(
+            var request = AddConversationEventRequest(
                 userId:engagementManager.userId,
                 directIntentHit: directIntent,
                 input: input,
@@ -115,6 +115,7 @@ extension ConversationView
             { [weak self] in
 
                 self?.engagementManager.isLaunchActionPerformed = true
+                self?.engagementManager.configOptions.routineHandler?.beforeAddConversationEvent(payload: &request)
                 self?.engagementManager.emit(.eventCreate, request)
             }
         }

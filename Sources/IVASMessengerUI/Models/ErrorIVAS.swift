@@ -1,6 +1,6 @@
 import Foundation
 
-struct ErrorIVAS: Codable
+public struct ErrorIVAS: Codable
 {
-    var message: String
+    public var message: String
 }

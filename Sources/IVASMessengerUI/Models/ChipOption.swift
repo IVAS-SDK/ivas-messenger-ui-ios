@@ -1,10 +1,10 @@
 import Foundation
 
-struct ChipOption: Identifiable
+public struct ChipOption: Identifiable
 {
-    let id = UUID().uuidString
+    public let id = UUID().uuidString
 
-    var displayText: String?
-    var directIntentHit: String?
-    var text: String
+    public var displayText: String?
+    public var directIntentHit: String?
+    public var text: String
 }

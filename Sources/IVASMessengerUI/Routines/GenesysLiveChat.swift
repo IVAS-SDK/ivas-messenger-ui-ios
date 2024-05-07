@@ -10,7 +10,7 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
     private let STATE_CONNECTED = "CONNECTED"
     private let STATE_DISCONNECTED = "DISCONNECTED"
     
-    private var conversationId : String? = nil
+    private var conversationId : String = ""
     
     private var engagementId : String? = nil
     
@@ -265,7 +265,7 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
                 sendPresence()
                 
                 proxyEndpoint = "\(apiBaseUrl)genesyswebhookproxy/connect"
-                let proxyConnectMessage = ProxyConnectMessage(conversationId: conversationId!)
+                let proxyConnectMessage = ProxyConnectMessage(conversationId: conversationId)
                 proxyJson = toJsonString(data: proxyConnectMessage)
                 let _ = postJsonString(urlString: proxyEndpoint, sendData: proxyJson)
             } else if ((message.clazz == "StructuredMessage") && (message.body["direction"] == "Outbound")) {
@@ -345,7 +345,10 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
     public func beforeAddConversationEvent(payload: inout AddConversationEventRequest) {
         
         let input = payload.input
-        conversationId = payload.conversationId
+        
+        if(conversationId == "") {
+            conversationId = payload.conversationId ?? ""
+        }
         
         if(!connected) {
             return

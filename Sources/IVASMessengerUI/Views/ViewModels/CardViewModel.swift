@@ -63,7 +63,7 @@ extension CardView
                 showMessage = true
                 
             } else if ((button.directIntentHit != nil) && (button.pendingData != nil)) {
-                let request = AddConversationEventRequest(
+                var request = AddConversationEventRequest(
                     conversationId: event.conversationId,
                     userId: engagementManager.userId,
                     directIntentHit: button.directIntentHit,
@@ -74,7 +74,7 @@ extension CardView
                     postBack: button.pendingData,
                     prod: engagementManager.configOptions.prod
                 )
-                
+                engagementManager.configOptions.routineHandler?.beforeAddConversationEvent(payload: &request)
                 engagementManager.emit(.eventCreate, request)
                 
             }
