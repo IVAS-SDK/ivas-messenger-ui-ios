@@ -57,7 +57,7 @@ public struct AddConversationEventRequest: SocketData
         }
         
         if(launchAction != nil) {
-            data["launchAction"] = launchAction
+            data["launchAction"] = ["preformedIntent":launchAction?.preformedIntent?.rawValue]
         }
         
         if(postBack != nil) {
