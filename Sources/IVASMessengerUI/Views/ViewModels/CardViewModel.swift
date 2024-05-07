@@ -61,7 +61,6 @@ extension CardView
                 
                 message = button.text ?? ""
                 showMessage = true
-                print(button.text!)
                 
             } else if ((button.directIntentHit != nil) && (button.pendingData != nil)) {
                 let request = AddConversationEventRequest(

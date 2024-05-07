@@ -14,16 +14,24 @@ struct NonUserEventView: View
         HStack(alignment: .bottom)
         {
             
-            if let avatar = event.sentBy?.avatar //conversation.participants[event.sentBy?.userId].av event.sentBy?.avatar TODO:
+            if let participant = engagementManager.participantsData[(event.sentBy?.userId)!]
             {
-                AsyncImage(url: URL(string: avatar))
-                { image in
-
-                    image.resizable()
-                        .frame(width: 30, height: 30)
-                        .clipShape(Circle())
-
-                } placeholder: {}
+                if let avatar = participant.avatar
+                {
+                    AsyncImage(url: URL(string: avatar))
+                    { image in
+                        
+                        image.resizable()
+                            .frame(width: 30, height: 30)
+                            .clipShape(Circle())
+                        
+                    } placeholder: {}
+                }
+                else
+                {
+                    Image(systemName: "person.circle")
+                        .font(.title)
+                }
             }
             else
             {

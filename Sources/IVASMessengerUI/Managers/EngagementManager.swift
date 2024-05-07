@@ -15,6 +15,8 @@ class EngagementManager: ObservableObject
     var localizationBundle: Bundle
     var userId = UUID().uuidString
     var userToken = ""
+    var conversationId = ""
+    var participantsData: [String: Participant] = [:]
 
     private var socketManager: SocketManager
     private var socket: SocketIOClient
@@ -137,9 +139,15 @@ class EngagementManager: ObservableObject
         { [weak self] (response: AddConversationEventResponse) in
             self?.conversationEventHandler?(response)
             
-            let connected = self?.configOptions.routineHandler?.afterAddConversationEvent(payload: response)
-            if(self?.showAction != connected) {
-                self?.showAction = connected ?? false
+            let routineAction = self?.configOptions.routineHandler?.afterAddConversationEvent(payload: response)
+            if(self?.showAction != routineAction) {
+                self?.showAction = routineAction ?? false
+            }
+            
+            if( (self?.conversationId == "") && (response.conversationId != nil)) {
+                self?.conversationId = response.conversationId!
+                let joinRequest = JoinConversationRequest(conversationId: self!.conversationId)
+                self?.emit(.conversationJoin, joinRequest)
             }
         }
         
@@ -147,10 +155,5 @@ class EngagementManager: ObservableObject
         { [weak self] (response: UserTokenResponse) in
             self?.updateUserToken(token:response)
         }
-        
-        //TODO:  _ = socket.on(.conversationUpdateParticipants)
-        // { [weak self] (response: UpdateParticipantsResponse) in
-        // }
-        
     }
 }

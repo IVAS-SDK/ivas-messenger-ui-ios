@@ -58,12 +58,14 @@ extension ParticipantsView
             { [weak self] (response: UpdateParticipantsResponse) in
 
                 self?.participantsData = self?.filterCurrentUser(data: response.participantsData) ?? []
+                self?.engagementManager.participantsData = response.participantsData
             })
 
             eventHandlers.append(engagementManager.registerHandler(.eventList)
             { [weak self] (response: ConversationEventsResponse) in
 
                 self?.participantsData = self?.filterCurrentUser(data: response.conversation.participantsData) ?? []
+                self?.engagementManager.participantsData = response.conversation.participantsData
             })
         }
 

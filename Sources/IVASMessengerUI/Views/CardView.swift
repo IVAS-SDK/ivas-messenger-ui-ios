@@ -85,12 +85,12 @@ struct CardView: View
                             if let imageUrl = cards[index].image
                             {
                                 AsyncImage(url: URL(string: imageUrl))
-                                { image in
+{ image in
                                     
                                     image.resizable()
                                         .aspectRatio(contentMode: .fit)
                                     
-                                } placeholder: {}
+                                } placeholder: {ProgressView().progressViewStyle(.circular) }
                             }
                             
                             if let title = cards[index].title

@@ -36,7 +36,6 @@ struct FormValidation: Codable, Equatable
 struct FormValidationRegex: Codable, Equatable
 {
     var pattern: String?
-    // TODO: Define flag contract for mobile when needed - js flags don't map 1:1
     var flags: String?
 }
 

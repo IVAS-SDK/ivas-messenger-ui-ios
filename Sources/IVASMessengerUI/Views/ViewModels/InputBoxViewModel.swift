@@ -36,7 +36,7 @@ extension InputBox
 
             inputText = ""
             
-            // TODO: handle input from all sources
+            // TODO: move emit(.eventCreate to a function in engagementManager, and have handler cover all input sources
             engagementManager.configOptions.routineHandler?.beforeAddConversationEvent(payload: &request)
 
             engagementManager.emit(.eventCreate, request)
