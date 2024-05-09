@@ -43,7 +43,7 @@ struct ConversationView: ViewControllable
                                         config: config,
                                         engagementManager: engagementManager,
                                         options: options.map({
-                                            ChipOption(displayText: $0.displayText, directIntentHit: $0.directIntentHit, text: $0.input)
+                                            ChipOption(displayText: $0.displayText,input: $0.input, configuration:$0.configuration)
                                         }),
                                         conversationId: nil
                                     )

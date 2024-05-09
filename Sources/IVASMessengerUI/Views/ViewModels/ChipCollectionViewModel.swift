@@ -23,8 +23,8 @@ extension ChipCollectionView
             var request = AddConversationEventRequest(
                 conversationId: conversationId,
                 userId: engagementManager.userId,
-                directIntentHit: option.directIntentHit,
-                input: option.text,
+                directIntentHit: option.configuration?.directIntentHit,
+                input: option.input,
                 launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
                 metadataValue: config.metadata?.metadataValue,

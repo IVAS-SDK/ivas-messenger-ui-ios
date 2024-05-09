@@ -298,7 +298,7 @@ extension ConversationView
                 input: response.input,
                 metadata: response.metadata,
                 options: response.options?.map({
-                    ChipOption(displayText: $0.displayText, directIntentHit: $0.directIntentHit, text: $0.input)
+                    ChipOption(displayText: $0.displayText,input: $0.input, configuration: $0.configuration)
                 }),
                 sentAt: response.sentAt,
                 sentBy: response.sentBy

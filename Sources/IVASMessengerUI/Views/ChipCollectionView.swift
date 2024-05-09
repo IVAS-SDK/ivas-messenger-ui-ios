@@ -15,7 +15,7 @@ struct ChipCollectionView: View
         WrappingHStack(self.chipOptions, alignment: .center, lineSpacing: 8)
         { option in
 
-            Button(option.displayText ?? option.text)
+            Button(option.displayText ?? option.input)
             {
                 viewModel.sendInput(option: option)
             }
