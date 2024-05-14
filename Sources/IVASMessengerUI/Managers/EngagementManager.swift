@@ -109,12 +109,6 @@ class EngagementManager: ObservableObject
             
             self?.isSocketConnected = true
             
-            guard self?.isAuthenticated == nil
-            else
-            {
-                return
-            }
-            
             self?.socket.emitWithAck("Engagement:get").timingOut(after: 10000)
             { args in
                 guard let dict = args.first as? [String: Any] else { return }

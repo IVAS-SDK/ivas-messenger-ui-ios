@@ -6,6 +6,7 @@ struct NonUserEventView: View
     @ObservedObject var config: Configuration
     @ObservedObject var engagementManager: EngagementManager
     let event: ConversationEvent
+    let isLast: Bool
     @State private var scales = [1.0, 1.0, 1.0]
     private let timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
 
@@ -44,7 +45,7 @@ struct NonUserEventView: View
                 VStack(alignment: .leading)
                 {
                     Text(.init(input))
-                    CardView(config: config, engagementManager: engagementManager, event: event)
+                    CardView(config: config, engagementManager: engagementManager, event: event, isLast: isLast)
                 }
                 .padding()
                 .background(Color(hex: "#ebeaea"))

@@ -26,6 +26,9 @@ struct CardButton: Codable, Hashable
 
     // valid for type DisplayText
     var text: String?
+    
+    //valid for type OpenUrl
+    var url: String?
 
     // valid for all
     var type: String?

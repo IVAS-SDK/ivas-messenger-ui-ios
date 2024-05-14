@@ -27,7 +27,7 @@ struct ConversationEventView: View
             }
             else
             {
-                NonUserEventView(config: config, engagementManager: engagementManager, event: event)
+                NonUserEventView(config: config, engagementManager: engagementManager, event: event, isLast: isLast)
                     .id(event.id)
                     .padding()
             }

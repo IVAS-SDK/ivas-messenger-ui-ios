@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import GenericJSON
 import SocketIO
 
@@ -14,8 +15,6 @@ extension CardView
         var engagementManager: EngagementManager
         var event: ConversationEvent
         
-        //var showingAlert: Bool = false
-
         // MARK: - Public Methods
 
         init(config: Configuration, manager: EngagementManager, event: ConversationEvent)
@@ -25,9 +24,9 @@ extension CardView
             self.event = event
         }
 
-        func getCardTemplate() -> CardTemplate?
+        func getCardTemplate(from:String) -> CardTemplate?
         {
-            guard let json = event.metadata?["outputs"]?["templateData"]
+            guard let json = event.metadata?["outputs"]?[from]
             else
             {
                 return nil
@@ -53,16 +52,20 @@ extension CardView
         func sendInput(for button: CardButton)
         {
             
-            if ((button.type == "ToggleVisibility") && (button.targetElements != nil)) {
+            if ((button.type?.lowercased() == "togglevisibility") && (button.targetElements != nil)) {
                 //for (cardId in button.targetElements!!) {
                 //    this.cardListView?.toggleCardVisibility(cardId)
                 //}
-            } else if ((button.type == "DisplayText") && button.text != nil) {
+            } else if ((button.type?.lowercased() == "displaytext") && button.text != nil) {
                 
                 message = button.text ?? ""
                 showMessage = true
                 
-            } else if ((button.directIntentHit != nil) && (button.pendingData != nil)) {
+            } else if ((button.type?.lowercased() == "openurl") && (button.url != nil)) {
+                if let url = URL(string: button.url!)  {
+                    UIApplication.shared.open(url)
+                }
+            } else if (button.directIntentHit != nil) {
                 var request = AddConversationEventRequest(
                     conversationId: event.conversationId,
                     userId: engagementManager.userId,

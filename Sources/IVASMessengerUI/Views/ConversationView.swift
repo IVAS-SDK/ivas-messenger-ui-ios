@@ -99,7 +99,7 @@ struct ConversationView: ViewControllable
                 Divider()
                     .overlay(.gray)
                 if(engagementManager.showAction) {
-                    Button(action:{engagementManager.configOptions.routineHandler?.onAction()}, label: {Text("End Live Chat")
+                    Button(action:{engagementManager.configOptions.routineHandler?.onAction()}, label: {Text("End Live Chat").foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()})
                         
