@@ -5,7 +5,6 @@ struct CardTemplate: Codable, Equatable
 {
     var image: String?
     var title: String?
-    var banner: String?
     var rows: [CardRow]?
     var buttons: [CardButton]?
     

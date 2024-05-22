@@ -22,8 +22,10 @@ struct ChipCollectionView: View
             .lineLimit(nil)
             .fixedSize(horizontal: false, vertical: true)
             .buttonStyle(.borderedProminent)
-            .tint(engagementManager.settings?.actionColor?.opacity(0.19))
+            .tint(.white)
             .foregroundColor(engagementManager.settings?.actionColor)
+            .border((engagementManager.settings?.actionColor)!, width: 2)
+            
         }
     }
 

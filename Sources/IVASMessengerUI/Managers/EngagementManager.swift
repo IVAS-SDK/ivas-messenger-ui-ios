@@ -9,6 +9,7 @@ class EngagementManager: ObservableObject
     @Published var isSocketConnected = false
     @Published var settings: MessengerEngagementSettings?
     @Published var showAction: Bool = false
+    
 
     var configOptions: ConfigOptions
     var conversationEventHandler: ((AddConversationEventResponse) -> ())?
@@ -17,6 +18,8 @@ class EngagementManager: ObservableObject
     var userToken = ""
     var conversationId = ""
     var participantsData: [String: Participant] = [:]
+    
+    var errorMessage:String? = nil
 
     private var socketManager: SocketManager
     private var socket: SocketIOClient
@@ -55,11 +58,6 @@ class EngagementManager: ObservableObject
 
         connect()
     }
-
-    deinit
-    {
-        disconnect()
-    }
     
     func updateUserToken(token: UserTokenResponse)
     {
@@ -72,7 +70,7 @@ class EngagementManager: ObservableObject
 
     func connect()
     {
-        let auth = ["token" :  self.configOptions.authToken,
+        let auth = ["token" : self.configOptions.authToken,
                     "userId" :  self.userId,
                     "referer" :  (self.configOptions.prod) ? "mobile-prod" : "mobile-stage",
                     "userToken" : self.userToken]
@@ -108,6 +106,7 @@ class EngagementManager: ObservableObject
         { [weak self] _, _ in
             
             self?.isSocketConnected = true
+            self?.isAuthenticated = true
             
             self?.socket.emitWithAck("Engagement:get").timingOut(after: 10000)
             { args in
@@ -115,7 +114,6 @@ class EngagementManager: ObservableObject
                 
                 let response = try? GetEngagementResponse(from: dict)
                 
-                self?.isAuthenticated = true
                 self?.settings = response?.settings
                 
                 self?.configOptions.routineHandler?.onEngagementLoad(settings: response?.routines.onEngagementLoad ?? "")
@@ -127,6 +125,20 @@ class EngagementManager: ObservableObject
         { [weak self] _, _ in
 
             self?.isSocketConnected = false
+        }
+        
+        socket.on(clientEvent: .error)
+        { [weak self] data, _ in
+            
+            
+            
+            
+            let resp = data[0] as? Dictionary<String, String>
+            self?.errorMessage = resp?["message"]
+            
+            self?.isSocketConnected = false
+            self?.isAuthenticated = false
+            
         }
 
         _ = socket.on(.eventCreate)

@@ -53,6 +53,11 @@ struct ConversationEventView: View
                 )
                 .padding()
             }
+            
+            if let _ = event.metadata?["outputs"]?["surveyData"], isLast
+            {
+                SurveyView(config: config, engagementManager: engagementManager, event: event, isLast: isLast)
+            }
         }
     }
 }

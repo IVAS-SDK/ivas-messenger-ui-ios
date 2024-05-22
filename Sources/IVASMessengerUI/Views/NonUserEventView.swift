@@ -49,6 +49,7 @@ struct NonUserEventView: View
                 }
                 .padding()
                 .background(Color(hex: "#ebeaea"))
+                .tint(engagementManager.settings?.actionColor)
                 .cornerRadius(8)
             }
             else if event.typing == true

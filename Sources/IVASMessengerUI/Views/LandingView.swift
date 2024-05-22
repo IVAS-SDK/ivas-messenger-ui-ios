@@ -21,8 +21,15 @@ struct LandingView: ViewControllable
                 ZStack
                 {
                     Color.gray.ignoresSafeArea()
-                    Text("ivas.landingView.unauthorized", bundle: engagementManager.localizationBundle)
+                    Text(engagementManager.errorMessage ?? "unknown error")
                         .foregroundColor(.white)
+                }
+                .toolbar
+                {
+                    ToolbarItem(placement: .navigationBarTrailing)
+                    {
+                        CloseButton(engagementManager: engagementManager, viewController: holder.viewController)
+                    }
                 }
 
             case true:

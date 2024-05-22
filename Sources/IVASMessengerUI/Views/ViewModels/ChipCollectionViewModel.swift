@@ -28,6 +28,7 @@ extension ChipCollectionView
                 launchAction: config.launchAction,
                 metadataName: config.metadata?.metadataName,
                 metadataValue: config.metadata?.metadataValue,
+                postBack: option.postBack,
                 prod: engagementManager.configOptions.prod
             )
 

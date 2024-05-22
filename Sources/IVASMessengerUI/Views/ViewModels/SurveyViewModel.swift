@@ -4,13 +4,10 @@ import GenericJSON
 import SocketIO
 
 @available(iOS 15, *)
-extension CardView
+extension SurveyView
 {
     @MainActor class ViewModel: ObservableObject
     {
-        @Published var showMessage: Bool = false
-        var message: String = ""
-        
         var config: Configuration
         var engagementManager: EngagementManager
         var event: ConversationEvent
@@ -36,8 +33,6 @@ extension CardView
             {
                 let data = try JSONEncoder().encode(json)
                 
-                //let str = String(data: data, encoding: .utf8)
-                
                 return try JSONDecoder().decode(CardTemplate.self, from: data)
             }
             catch
@@ -51,21 +46,7 @@ extension CardView
 
         func sendInput(for button: CardButton)
         {
-            if (button.type?.lowercased() == "togglevisibility") {
-                //for (cardId in button.targetElements!!) {
-                //    this.cardListView?.toggleCardVisibility(cardId)
-                //}
-                
-            } else if (button.type?.lowercased() == "displaytext") {
-                
-                message = button.text ?? ""
-                showMessage = true
-                
-            } else if (button.type?.lowercased() == "openurl") {
-                if let url = URL(string: button.url!)  {
-                    UIApplication.shared.open(url)
-                }
-            } else {
+            if (button.directIntentHit != nil) {
                 var request = AddConversationEventRequest(
                     conversationId: event.conversationId,
                     userId: engagementManager.userId,
@@ -77,9 +58,9 @@ extension CardView
                     postBack: button.pendingData,
                     prod: engagementManager.configOptions.prod
                 )
-                
                 engagementManager.configOptions.routineHandler?.beforeAddConversationEvent(payload: &request)
                 engagementManager.emit(.eventCreate, request)
+                
             }
         }
     }
