@@ -114,8 +114,8 @@ func presentMessenger()
     {
         //...
 
-        let inputLaunchAction = LaunchAction(preformedInput: "Launch with this input")
-        let intentLaunchAction = LaunchAction(preformedIntent: .Password1)
+        let inputLaunchAction = LaunchAction(utterance: "Launch with this input")
+        let intentLaunchAction = LaunchAction(name: "Password1", utterance: "Password Help", directIntentHit: "MAPP: Custom Password Reset 1")
 
         let config = Configuration(
             launchAction: inputLaunchAction,

@@ -63,12 +63,7 @@ extension LandingView
 
         private func shouldPerformLaunchAction() -> Bool
         {
-            if let input = config.launchAction?.preformedInput, !input.isEmpty
-            {
-                return true
-            }
-
-            if let intent = config.launchAction?.preformedIntent, intent != .Account && intent != .ContactUs
+            if let utterance = config.launchAction?.utterance, !utterance.isEmpty
             {
                 return true
             }

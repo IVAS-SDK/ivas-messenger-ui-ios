@@ -70,12 +70,7 @@ extension ConversationView
                 return false
             }
 
-            if let input = config.launchAction?.preformedInput, !input.isEmpty
-            {
-                return true
-            }
-
-            if let intent = config.launchAction?.preformedIntent, intent != .Account && intent != .ContactUs
+            if let utterance = config.launchAction?.utterance, !utterance.isEmpty
             {
                 return true
             }
@@ -88,18 +83,8 @@ extension ConversationView
             //guard let engagementId = engagementManager.settings?.engagementId,
             if(!shouldPerformLaunchAction(config: config)) {return }
 
-            var input = ""
-            var directIntent: String? = nil
-
-            if let text = config.launchAction?.preformedInput, !text.isEmpty
-            {
-                input = text
-            }
-            else if let data = config.launchAction?.preformedIntent?.mappedData()
-            {
-                input = data.utterance
-                directIntent = data.directIntentHit
-            }
+            let input = (config.launchAction?.utterance)!
+            let directIntent = config.launchAction?.directIntentHit
 
             var request = AddConversationEventRequest(
                 userId:engagementManager.userId,
