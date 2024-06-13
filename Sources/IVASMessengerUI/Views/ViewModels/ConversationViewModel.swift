@@ -80,7 +80,6 @@ extension ConversationView
 
         func performLaunchAction(config: Configuration)
         {
-            //guard let engagementId = engagementManager.settings?.engagementId,
             if(!shouldPerformLaunchAction(config: config)) {return }
 
             let input = (config.launchAction?.utterance)!
