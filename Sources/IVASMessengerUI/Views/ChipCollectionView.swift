@@ -15,14 +15,15 @@ struct ChipCollectionView: View
         WrappingHStack(self.chipOptions, alignment: .center, lineSpacing: 8)
         { option in
 
-            Button(option.displayText ?? option.input)
+            Button()
             {
                 viewModel.sendInput(option: option)
-            }
+            } label: { Text(option.displayText ?? option.input).padding(.horizontal, 12).padding(.vertical, 6) }
             .lineLimit(nil)
             .fixedSize(horizontal: false, vertical: true)
             .buttonStyle(.borderedProminent)
             .tint(.white)
+            .background((engagementManager.settings?.actionColor)!)
             .foregroundColor(engagementManager.settings?.actionColor)
             .border((engagementManager.settings?.actionColor)!, width: 2)
             

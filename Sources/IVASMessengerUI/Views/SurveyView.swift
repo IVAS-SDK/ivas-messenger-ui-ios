@@ -57,13 +57,14 @@ struct SurveyView: View
                                         ForEach(0..<buttons.count, id: \.self)
                                         { index in
                                             
-                                            Button(buttons[index].title)
+                                            Button
                                             {
                                                 viewModel.sendInput(for: buttons[index])
-                                            }
+                                            } label: { Text(buttons[index].title).padding(.horizontal, 12).padding(.vertical, 6) }
                                             .buttonStyle(.borderedProminent)
                                             .tint(engagementManager.settings?.actionColor)
-                                            .padding()
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 12)
                                             
                                         }
                                     }

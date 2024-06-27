@@ -4,7 +4,7 @@ import GenericJSON
 
 
 public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
-
+    
     private let STATE_CONNECTING = "CONNECTING"
     private let STATE_DISCONNECTING = "DISCONNECTING"
     private let STATE_CONNECTED = "CONNECTED"
@@ -85,6 +85,7 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
         return responseString
     }
     
+    
     private func disconnect(originator: String = "operator") {
         
         if (originator != "operator") {
@@ -112,7 +113,7 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
         let json = toJsonString(data: initMessage)
         
         
-
+        
         
         print("GenesysLiveChat::sendInit::\(liveChatGuid) - \(json)")
         
@@ -141,7 +142,7 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
         let message = PingMessage(action: "echo", message: TextMessage(type: "Text", text: "ping"))
         let json = toJsonString(data: message)
         
-         print("GenesysLiveChat::sendPing::\(liveChatGuid) - \(json)")
+        print("GenesysLiveChat::sendPing::\(liveChatGuid) - \(json)")
         
         socket?.write(string:json)
     }
@@ -150,8 +151,8 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
     private func sendPresence() {
         var channelMetaData: [String: JSON] = [:]
         channelMetaData["customAttributes"] = toJsonObject(data: metadata)
-        channelMetaData["FirstName"] = metadata["firstName"] ?? "FirstNotFound"
-        channelMetaData["LastName"] = metadata["lastName"] ?? "LastNotFound"
+        channelMetaData["FirstName"] = metadata["firstName"] ?? ""
+        channelMetaData["LastName"] = metadata["lastName"] ?? ""
         channelMetaData["brand"] = metadata["brandCode"] ?? "6C"
         channelMetaData["language"] =  metadata["language"] ?? "EN"
         channelMetaData["rcNumber"] = metadata["rewardsClubNumber"] ?? ""
@@ -166,15 +167,19 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
         socket?.write(string:json)
     }
     
+    
     private func toJsonString(data: Codable) -> String {
         let jsonData = try! JSONEncoder().encode(data)
         return String(data: jsonData, encoding: .utf8)!
     }
+    
+    
     private func ToObject<T>(_ type: T.Type, from data: String) -> T where T : Decodable{
         
         return try! JSONDecoder().decode(type, from: data.data(using: .utf8)!)
-
+        
     }
+    
     
     private func toJsonObject(data: Codable) -> JSON {
         let data = try! JSONEncoder().encode(data)
@@ -190,48 +195,47 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
     
     public func didReceive(event: Starscream.WebSocketEvent, client: any Starscream.WebSocketClient) {
         switch event {
-            case .connected(let headers):
-                connected = true
-                print("GenesysLiveChat::onOpen::\(liveChatGuid) - Connection established: \(headers)")
-                
-                sendInit()
+        case .connected(let headers):
+            connected = true
+            print("GenesysLiveChat::onOpen::\(liveChatGuid) - Connection established: \(headers)")
+            
+            sendInit()
             
             
-            case .disconnected(let reason, let code):
-                onClose()
+        case .disconnected(let reason, let code):
+            onClose()
             print("GenesysLiveChat::onDisconnect::\(liveChatGuid) - \(code) - \(reason)")
             
-            case .text(let string):
-                onMessage(text: string)
+        case .text(let string):
+            onMessage(text: string)
             
-            case .ping(_):
-                break
+        case .ping(_):
+            break
             
-            case .pong(_):
-                break
+        case .pong(_):
+            break
             
-            case .viabilityChanged(_):
-                break
+        case .viabilityChanged(_):
+            break
             
-            case .reconnectSuggested(_):
-                break
+        case .reconnectSuggested(_):
+            break
             
-            case .cancelled:
-                onClose()
+        case .cancelled:
+            onClose()
             print("GenesysLiveChat::onCancelled::\(liveChatGuid)")
             
-            case .error(let error):
+        case .error(let error):
+            onClose()
             print("GenesysLiveChat::onError::\(liveChatGuid) -  \(String(describing: error))")
-                connected = false
             
-            case .peerClosed:
-                break
-            case .binary(_):
-                break
+            
+        case .peerClosed:
+            break
+        case .binary(_):
+            break
         }
     }
-    
-    
     
     
     func onClose() {
@@ -245,8 +249,8 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
         let proxyJson = toJsonString(data: proxyDisconnectMessage)
         let _ = postJsonString(urlString: proxyEndpoint, sendData: proxyJson)
     }
-
-        
+    
+    
     func onMessage(text: String) {
         
         print("GenesysLiveChat::onMessage::\(liveChatGuid) -  \(text)")
@@ -271,7 +275,7 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
             } else if ((message.clazz == "StructuredMessage") && (message.body["direction"] == "Outbound")) {
                 
                 let obj = ToObject(JSON.self, from: text)
-      
+                
                 
                 proxyEndpoint = "\(apiBaseUrl)genesyswebhookproxy/processmessage"
                 
@@ -280,8 +284,8 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
                 let proxyReturn = postJsonString(urlString: proxyEndpoint, sendData: proxyJson)
                 if(proxyReturn.count > 0) {
                     let proxyReturnObj = ToObject(ProxyReturnMessage.self, from: proxyReturn)
-                
-                
+                    
+                    
                     if (proxyReturnObj.data == STATE_DISCONNECTING) {
                         disconnect(originator: "operator")
                     }
@@ -290,7 +294,7 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
         }
     }
     
-
+    
     public func afterAddConversationEvent(payload: AddConversationEventResponse) -> Bool {
         
         let trackingJson = payload.metadata?["trackingJson"]
@@ -365,9 +369,8 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
     }
     
     
-    
     public func onEngagementLoad(settings: String) {
-
+        
         let settingsObj = try? JSONDecoder().decode(MobileSettings.self, from: (settings.data(using: .utf8)!))
         
         if(settingsObj == nil) {
@@ -387,9 +390,6 @@ public class GenesysLiveChat : IEngagementRoutine, WebSocketDelegate {
     
     
     public func onAction() {
-        
-        if(connected) {
-            disconnect(originator: "user")
-        }
+        disconnect(originator: "user")
     }
 }
