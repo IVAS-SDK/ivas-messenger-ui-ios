@@ -72,7 +72,7 @@ class EngagementManager: ObservableObject
     {
         let auth = ["token" : self.configOptions.authToken,
                     "userId" :  self.userId,
-                    "referer" :  (self.configOptions.prod) ? "mobile-prod" : "mobile-stage",
+                    "referer" :  (self.configOptions.prod) ? "https://mobile-prod" : "https://mobile-stage",
                     "userToken" : self.userToken]
         
         socket.connect(withPayload: auth)
