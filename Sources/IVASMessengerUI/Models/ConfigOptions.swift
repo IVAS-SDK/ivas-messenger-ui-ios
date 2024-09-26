@@ -1,7 +1,7 @@
 import Foundation
 import SocketIO
 
-public let defaultUrl = URL("https://messenger.usw.ivastudio.ai")
+public let defaultUrl = URL(string: "https://messenger.usw.ivastudio.ai")
 public let defaultNamespace = "/v1"
 
 public let defaultConfig: SocketIOClientConfiguration = [
@@ -24,7 +24,7 @@ public struct ConfigOptions
         authToken: String,
         moduleLocalization: Bool = false,
         socketConfig: SocketIOClientConfiguration = defaultConfig,
-        socketUrl: URL = defaultUrl,
+        socketUrl: URL = defaultUrl!,
         namespace: String = defaultNamespace,
         prod: Bool = true,
         routineHandler: IEngagementRoutine? = nil
